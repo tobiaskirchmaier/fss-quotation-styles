@@ -70,10 +70,16 @@
                                 <xsl:text>b:Author/b:Author/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:Title</xsl:text>
+                                <xsl:text>b:Author/b:Editor/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Author/b:BookAuthor/b:NameList</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Title</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:BookTitle</xsl:text>
@@ -82,13 +88,16 @@
                                 <xsl:text>b:Year</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:Pages</xsl:text>
-                            </b:ImportantField>
-                            <b:ImportantField>
                                 <xsl:text>b:City</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Publisher</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ChapterNumber</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Edition</xsl:text>
                             </b:ImportantField>
                         </xsl:when>
 
@@ -639,6 +648,9 @@
         <xsl:call-template name="DisplayTitle">
             <xsl:with-param name="title" select="$src/b:Title" />
         </xsl:call-template>
+        <xsl:call-template name="DisplayChapter">
+            <xsl:with-param name="chapter" select="$src/b:ChapterNumber" />
+        </xsl:call-template>
         <xsl:call-template name="DisplayBookAuthors">
             <xsl:with-param name="bookAuthors" select="$src/b:Author/b:BookAuthor/b:NameList" />
             <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
@@ -971,6 +983,18 @@
                 <xsl:text>, </xsl:text>
                 <xsl:value-of select="$edition" />
                 <xsl:text> Aufl.</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="DisplayChapter">
+        <xsl:param name="chapter" />
+
+        <xsl:choose>
+            <xsl:when test="string-length($chapter) &gt; 0">
+                <xsl:text> (Kap. </xsl:text>
+                <xsl:value-of select="$chapter" />
+                <xsl:text>)</xsl:text>
             </xsl:when>
         </xsl:choose>
     </xsl:template>
