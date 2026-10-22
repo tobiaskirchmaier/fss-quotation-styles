@@ -548,43 +548,21 @@
         <xsl:param name="src" />
         <xsl:param name="pages" />
 
-        <xsl:variable name="displayShortTitle">
-            <xsl:call-template name="DisplayTitleShort">
-                <xsl:with-param name="title" select="$src/b:Title" />
-                <xsl:with-param name="shortTitle" select="$src/b:ShortTitle" />
-            </xsl:call-template>
-        </xsl:variable>
-
-        <xsl:variable name="displayTitle">
-            <xsl:call-template name="DisplayTitle">
-                <xsl:with-param name="title" select="$src/b:Title" />
-            </xsl:call-template>
-        </xsl:variable>
-
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
             <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
         </xsl:call-template>
         <xsl:text>: </xsl:text>
-        <xsl:choose>
-            <xsl:when test="count($src/b:Author/b:Editor/b:NameList) &lt; 1">
-                <xsl:call-template name="DisplayTitle">
-                    <xsl:with-param name="title" select="$src/b:Title" />
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="$displayShortTitle" />
-                <xsl:text>, in: </xsl:text>
-                <xsl:call-template name="NameList">
-                    <xsl:with-param name="persons" select="$src/b:Author/b:Editor/b:NameList" />
-                </xsl:call-template>
-                <xsl:text> (Hrsg.)</xsl:text>
-                <xsl:if test="not($displayTitle=$displayShortTitle)">
-                    <xsl:text>: </xsl:text>
-                    <xsl:value-of select="$displayTitle" />
-                </xsl:if>
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:if test="count($src/b:Author/b:Editor/b:NameList) &gt; 0">
+            <xsl:text>, hrsg. von </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$src/b:Author/b:Editor/b:NameList" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+        </xsl:if>
         <xsl:call-template name="DisplayVolume">
             <xsl:with-param name="volume" select="$src/b:Volume" />
         </xsl:call-template>
@@ -854,7 +832,9 @@
 
         <xsl:choose>
             <xsl:when test="string-length($title) &gt; 0">
-                <xsl:value-of select="$title" />
+                <span style="font-style:italic">
+                    <xsl:value-of select="$title" />
+                </span>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:text>o. T.</xsl:text>
@@ -868,7 +848,9 @@
 
         <xsl:choose>
             <xsl:when test="string-length($shortTitle) &gt; 0">
-                <xsl:value-of select="$shortTitle" />
+                <span style="font-style:italic">
+                    <xsl:value-of select="$shortTitle" />
+                </span>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="DisplayTitle">
