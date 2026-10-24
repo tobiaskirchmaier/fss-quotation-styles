@@ -106,6 +106,9 @@
                                 <xsl:text>b:Author/b:Author/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:Author/b:Editor/b:NameList</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
@@ -115,7 +118,22 @@
                                 <xsl:text>b:Year</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:Pages</xsl:text>
+                                <xsl:text>b:Month</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Day</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:City</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Issue</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Publisher</xsl:text>
                             </b:ImportantField>
                         </xsl:when>
 
