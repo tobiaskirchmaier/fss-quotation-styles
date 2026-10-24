@@ -586,13 +586,9 @@
         <xsl:call-template name="DisplayEdition">
             <xsl:with-param name="edition" select="$src/b:Edition" />
         </xsl:call-template>
-        <xsl:if test="count($src/b:Author/b:Translator/b:NameList) &gt; 0">
-            <xsl:text>, übers. von </xsl:text>
-            <xsl:call-template name="NameList">
-                <xsl:with-param name="persons" select="$src/b:Author/b:Translator/b:NameList" />
-                <xsl:with-param name="smallCaps" select="'false'" />
-            </xsl:call-template>
-        </xsl:if>
+        <xsl:call-template name="DisplayTranslators">
+            <xsl:with-param name="translators" select="$src/b:Author/b:Translator/b:NameList" />
+        </xsl:call-template>
         <xsl:call-template name="DisplayLocation">
             <xsl:with-param name="city" select="$src/b:City" />
             <xsl:with-param name="province" select="$src/b:StateProvince" />
@@ -666,10 +662,8 @@
             <xsl:with-param name="title" select="$src/b:BookTitle" />
         </xsl:call-template>
         <xsl:if test="count($src/b:Author/b:BookAuthor/b:NameList) &gt; 0 and count($src/b:Author/b:Editor/b:NameList) &gt; 0">
-            <xsl:text>, hrsg. von </xsl:text>
-            <xsl:call-template name="NameList">
-                <xsl:with-param name="persons" select="$src/b:Author/b:Editor/b:NameList" />
-                <xsl:with-param name="smallCaps" select="'false'" />
+            <xsl:call-template name="DisplayEditors">
+                <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
             </xsl:call-template>
         </xsl:if>
         <xsl:call-template name="DisplayVolume">
@@ -678,13 +672,9 @@
         <xsl:call-template name="DisplayEdition">
             <xsl:with-param name="edition" select="$src/b:Edition" />
         </xsl:call-template>
-        <xsl:if test="count($src/b:Author/b:Translator/b:NameList) &gt; 0">
-            <xsl:text>, übers. von </xsl:text>
-            <xsl:call-template name="NameList">
-                <xsl:with-param name="persons" select="$src/b:Author/b:Translator/b:NameList" />
-                <xsl:with-param name="smallCaps" select="'false'" />
-            </xsl:call-template>
-        </xsl:if>
+        <xsl:call-template name="DisplayTranslators">
+            <xsl:with-param name="translators" select="$src/b:Author/b:Translator/b:NameList" />
+        </xsl:call-template>
         <xsl:call-template name="DisplayLocation">
             <xsl:with-param name="city" select="$src/b:City" />
             <xsl:with-param name="province" select="$src/b:StateProvince" />
@@ -850,6 +840,18 @@
             <xsl:text>, hrsg. von </xsl:text>
             <xsl:call-template name="NameList">
                 <xsl:with-param name="persons" select="$editors" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayTranslators">
+        <xsl:param name="translators" />
+
+        <xsl:if test="count($translators) &gt; 0">
+            <xsl:text>, übers. von </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$translators" />
                 <xsl:with-param name="smallCaps" select="'false'" />
             </xsl:call-template>
         </xsl:if>
