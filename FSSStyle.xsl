@@ -313,7 +313,10 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:InternetSiteTitle</xsl:text>
+                                <xsl:text>b:Medium</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
@@ -323,6 +326,15 @@
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Day</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:DayAccessed</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:MonthAccessed</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:YearAccessed</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:URL</xsl:text>
@@ -651,6 +663,18 @@
             </xsl:when>
             <xsl:when test="$src/b:SourceType = 'InternetSite' and $mode = 'Short'">
                 <xsl:call-template name="InternetSiteShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'DocumentFromInternetSite' and $mode = 'Long'">
+                <xsl:call-template name="InternetDocumentLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'DocumentFromInternetSite' and $mode = 'Short'">
+                <xsl:call-template name="BookShort">
                     <xsl:with-param name="src" select="$src" />
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
@@ -1115,6 +1139,57 @@
             <xsl:with-param name="year" select="$src/b:Year" />
             <xsl:with-param name="prefix" select="', '" />
             <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+    </xsl:template>
+
+    <xsl:template name="InternetDocumentLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="dateSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:if test="string-length($src/b:InternetSiteTitle) &gt; 0">
+            <xsl:text>, in: </xsl:text>
+            <xsl:call-template name="DisplayWebsiteTitle">
+                <xsl:with-param name="websiteTitle" select="$src/b:InternetSiteTitle" />
+            </xsl:call-template>
+        </xsl:if>
+        <xsl:call-template name="DisplayEditors">
+            <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayProducers">
+            <xsl:with-param name="productionCompany" select="$src/b:ProductionCompany" />
+            <xsl:with-param name="producers" select="$src/b:Author/b:ProducerName/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="day" select="$src/b:Day" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
         </xsl:call-template>
     </xsl:template>
 
