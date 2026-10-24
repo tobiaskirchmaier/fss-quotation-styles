@@ -145,6 +145,9 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:PeriodicalTitle</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
@@ -157,7 +160,16 @@
                                 <xsl:text>b:Day</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:Pages</xsl:text>
+                                <xsl:text>b:City</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Publisher</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Edition</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Issue</xsl:text>
                             </b:ImportantField>
                         </xsl:when>
 
