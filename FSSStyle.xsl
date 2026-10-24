@@ -747,13 +747,11 @@
             <xsl:with-param name="year" select="$src/b:Year" />
             <xsl:with-param name="suffix" select="'.'" />
         </xsl:call-template>
-        <xsl:text> Download am </xsl:text>
-        <xsl:call-template name="DisplayDate">
-            <xsl:with-param name="day" select="$src/b:DayAccessed" />
-            <xsl:with-param name="month" select="$src/b:MonthAccessed" />
-            <xsl:with-param name="year" select="$src/b:YearAccessed" />
-        </xsl:call-template>
-        <xsl:call-template name="DisplayUrl">
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
             <xsl:with-param name="url" select="$src/b:URL" />
         </xsl:call-template>
     </xsl:template>
@@ -1170,16 +1168,6 @@
                 </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
-    </xsl:template>
-
-    <xsl:template name="DisplayUrl">
-        <xsl:param name="url" />
-
-        <xsl:if test="string-length($url) &gt; 0">
-            <xsl:text> unter </xsl:text>
-            <br />
-            <xsl:value-of select="$url" />
-        </xsl:if>
     </xsl:template>
 
     <xsl:template name="DisplayPages">
