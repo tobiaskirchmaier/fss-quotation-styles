@@ -650,6 +650,13 @@
         <xsl:param name="src" />
         <xsl:param name="pages" />
 
+        <xsl:variable name="dateSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
             <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
@@ -678,13 +685,11 @@
         <xsl:call-template name="DisplayPublisher">
             <xsl:with-param name="publisher" select="$src/b:Publisher" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayYear">
+        <xsl:call-template name="DisplayDate">
             <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayPages">
-            <xsl:with-param name="pages" select="$pages" />
-        </xsl:call-template>
-        <xsl:text>.</xsl:text>
         <xsl:call-template name="DisplayMedium">
             <xsl:with-param name="medium" select="$src/b:Medium" />
         </xsl:call-template>
@@ -701,6 +706,13 @@
         <xsl:param name="src" />
         <xsl:param name="pages" />
 
+        <xsl:variable name="dateSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
             <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
@@ -711,18 +723,23 @@
             <xsl:with-param name="title" select="$src/b:Title" />
             <xsl:with-param name="shortTitle" select="$src/b:ShortTitle" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayYear">
+        <xsl:call-template name="DisplayDate">
             <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayPages">
-            <xsl:with-param name="pages" select="$pages" />
-        </xsl:call-template>
-        <xsl:text>.</xsl:text>
     </xsl:template>
 
     <xsl:template name="BookSectionLong">
         <xsl:param name="src" />
         <xsl:param name="pages" />
+
+        <xsl:variable name="dateSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
 
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
@@ -764,13 +781,11 @@
         <xsl:call-template name="DisplayPublisher">
             <xsl:with-param name="publisher" select="$src/b:Publisher" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayYear">
+        <xsl:call-template name="DisplayDate">
             <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayPages">
-            <xsl:with-param name="pages" select="$pages" />
-        </xsl:call-template>
-        <xsl:text>.</xsl:text>
         <xsl:call-template name="DisplayMedium">
             <xsl:with-param name="medium" select="$src/b:Medium" />
         </xsl:call-template>
@@ -1066,6 +1081,14 @@
         <xsl:param name="src" />
         <xsl:param name="pages" />
 
+        <xsl:variable name="dateSuffix">
+            <xsl:if test="string-length($pages) &gt; 0">
+                <xsl:text>, </xsl:text>
+                <xsl:value-of select="$pages" />
+            </xsl:if>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
             <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
@@ -1076,14 +1099,11 @@
             <xsl:with-param name="title" select="$src/b:Title" />
             <xsl:with-param name="shortTitle" select="$src/b:ShortTitle" />
         </xsl:call-template>
-        <xsl:call-template name="DisplayYear">
+        <xsl:call-template name="DisplayDate">
             <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
         </xsl:call-template>
-        <xsl:if test="string-length($pages) &gt; 0">
-            <xsl:text>, </xsl:text>
-            <xsl:value-of select="$pages" />
-        </xsl:if>
-        <xsl:text>.</xsl:text>
     </xsl:template>
 
     <xsl:template name="DisplayAuthors">
@@ -1548,7 +1568,7 @@
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:text> o. J.</xsl:text>
+                <xsl:text>o. J.</xsl:text>
                 <xsl:if test="string-length($suffix) &gt; 0 and $suffix != '.'">
                     <xsl:value-of select="$suffix" />
                 </xsl:if>
