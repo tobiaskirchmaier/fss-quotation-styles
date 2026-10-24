@@ -577,13 +577,9 @@
         <xsl:call-template name="DisplayTitle">
             <xsl:with-param name="title" select="$src/b:Title" />
         </xsl:call-template>
-        <xsl:if test="count($src/b:Author/b:Editor/b:NameList) &gt; 0">
-            <xsl:text>, hrsg. von </xsl:text>
-            <xsl:call-template name="NameList">
-                <xsl:with-param name="persons" select="$src/b:Author/b:Editor/b:NameList" />
-                <xsl:with-param name="smallCaps" select="'false'" />
-            </xsl:call-template>
-        </xsl:if>
+        <xsl:call-template name="DisplayEditors">
+            <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+        </xsl:call-template>
         <xsl:call-template name="DisplayVolume">
             <xsl:with-param name="volume" select="$src/b:Volume" />
         </xsl:call-template>
@@ -718,34 +714,49 @@
 
     <xsl:template name="InternetSiteLong">
         <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="dateSuffix">
+            <xsl:choose>
+                <xsl:when test="string-length($pages) &gt; 0">
+                    <xsl:text>, </xsl:text>
+                    <xsl:value-of select="$pages" />
+                    <xsl:text>.</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>.</xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
             <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
-        </xsl:call-template>
-        <xsl:call-template name="DisplayProducers">
-            <xsl:with-param name="productionCompany" select="$src/b:ProductionCompany" />
-            <xsl:with-param name="producers" select="$src/b:Author/b:ProducerName/b:NameList" />
         </xsl:call-template>
         <xsl:text>: </xsl:text>
         <xsl:call-template name="DisplayTitle">
             <xsl:with-param name="title" select="$src/b:Title" />
         </xsl:call-template>
         <xsl:text>, in: </xsl:text>
-        <xsl:if test="count($src/b:Author/b:Editor/b:NameList) &gt; 0">
-            <xsl:call-template name="NameList">
-                <xsl:with-param name="persons" select="$src/b:Author/b:Editor/b:NameList" />
-            </xsl:call-template>
-            <xsl:text> (Hrsg.): </xsl:text>
-        </xsl:if>
         <xsl:call-template name="DisplayWebsiteTitle">
             <xsl:with-param name="websiteTitle" select="$src/b:InternetSiteTitle" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayEditors">
+            <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayProducers">
+            <xsl:with-param name="productionCompany" select="$src/b:ProductionCompany" />
+            <xsl:with-param name="producers" select="$src/b:Author/b:ProducerName/b:NameList" />
         </xsl:call-template>
         <xsl:call-template name="DisplayDate">
             <xsl:with-param name="day" select="$src/b:Day" />
             <xsl:with-param name="month" select="$src/b:Month" />
             <xsl:with-param name="year" select="$src/b:Year" />
-            <xsl:with-param name="suffix" select="'.'" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
         </xsl:call-template>
         <xsl:call-template name="DisplayDownload">
             <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
@@ -832,31 +843,33 @@
         <xsl:text>: </xsl:text>
     </xsl:template>
 
+    <xsl:template name="DisplayEditors">
+        <xsl:param name="editors" />
+
+        <xsl:if test="count($editors) &gt; 0">
+            <xsl:text>, hrsg. von </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$editors" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
     <xsl:template name="DisplayProducers">
         <xsl:param name="productionCompany" />
         <xsl:param name="producers" />
 
-        <xsl:if test="string-length($productionCompany) &gt; 0">
-            <xsl:text> / </xsl:text>
-            <span style="font-variant:small-caps">
-                <xsl:value-of select="$productionCompany" />
-            </span>
-        </xsl:if>
         <xsl:if test="count($producers) &gt; 0">
-            <xsl:choose>
-                <xsl:when test="string-length($productionCompany) &lt; 1">
-                    <xsl:text> / </xsl:text>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:text>, </xsl:text>
-                </xsl:otherwise>
-            </xsl:choose>
+            <xsl:text>, prod. von </xsl:text>
             <xsl:call-template name="NameList">
                 <xsl:with-param name="persons" select="$producers" />
+                <xsl:with-param name="smallCaps" select="'false'" />
             </xsl:call-template>
         </xsl:if>
-        <xsl:if test="string-length($productionCompany) &gt; 0 or count($producers) &gt; 0">
-            <xsl:text> (Prod.)</xsl:text>
+        <xsl:if test="string-length($productionCompany) &gt; 0">
+            <text>, </text>
+            <xsl:value-of select="$productionCompany" />
+            <text> (Prod.)</text>
         </xsl:if>
     </xsl:template>
 
@@ -1099,10 +1112,14 @@
     <xsl:template name="DisplayWebsiteTitle">
         <xsl:param name="websiteTitle" />
 
-        <xsl:if test="string-length($websiteTitle) &gt; 0">
-            <xsl:value-of select="$websiteTitle" />
-            <xsl:text>, </xsl:text>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="string-length($websiteTitle) &gt; 0">
+                <xsl:value-of select="$websiteTitle" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>o. T.</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="DisplayYear">
@@ -1126,8 +1143,12 @@
         <xsl:param name="day" select="''" />
         <xsl:param name="month" select="''" />
         <xsl:param name="year" select="''" />
+        <xsl:param name="prefix" select="''" />
         <xsl:param name="suffix" select="''" />
 
+        <xsl:if test="string-length($prefix) &gt; 0">
+            <xsl:value-of select="$prefix" />
+        </xsl:if>
         <xsl:if test="string-length($day) &gt; 0">
             <xsl:value-of select="$day" />
             <xsl:text>.</xsl:text>
