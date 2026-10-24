@@ -208,10 +208,22 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Publisher</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Institution</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ThesisType</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Department</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:City</xsl:text>
