@@ -427,25 +427,34 @@
                                 <xsl:text>b:Author/b:Author/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:Author/b:ProducerName/b:NameList</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:Title</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:City</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:Medium</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:CountryRegion</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:StateProvince</xsl:text>
+                                <xsl:text>b:Publisher</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:Month</xsl:text>
+                                <xsl:text>b:PublicationTitle</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
-                                <xsl:text>b:Day</xsl:text>
+                                <xsl:text>b:ProductionCompany</xsl:text>
                             </b:ImportantField>
                         </xsl:when>
 
@@ -675,6 +684,18 @@
             </xsl:when>
             <xsl:when test="$src/b:SourceType = 'DocumentFromInternetSite' and $mode = 'Short'">
                 <xsl:call-template name="BookShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'ElectronicSource' and $mode = 'Long'">
+                <xsl:call-template name="ElectronicSourceLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'ElectronicSource' and $mode = 'Short'">
+                <xsl:call-template name="InternetSiteShort">
                     <xsl:with-param name="src" select="$src" />
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
@@ -1193,6 +1214,81 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template name="ElectronicSourceLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="datePrefix">
+            <xsl:if test="string-length($src/b:Publisher) &gt; 0">
+                <xsl:value-of select="$src/b:Publisher" />
+                <xsl:text>, </xsl:text>
+            </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="dateSuffix">
+            <xsl:if test="string-length($pages) &gt; 0">
+                <xsl:text>, </xsl:text>
+                <xsl:value-of select="$pages" />
+            </xsl:if>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:if test="string-length($src/b:PublicationTitle) &gt; 0">
+            <xsl:text>, in: </xsl:text>
+            <xsl:call-template name="DisplayTitle">
+                <xsl:with-param name="title" select="$src/b:PublicationTitle" />
+            </xsl:call-template>
+        </xsl:if>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayEditors">
+            <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayCompilers">
+            <xsl:with-param name="compilers" select="$src/b:Author/b:Compiler/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayProducers">
+            <xsl:with-param name="productionCompany" select="$src/b:ProductionCompany" />
+            <xsl:with-param name="producers" select="$src/b:Author/b:ProducerName/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayVolume">
+            <xsl:with-param name="volume" select="$src/b:Volume" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayEdition">
+            <xsl:with-param name="edition" select="$src/b:Edition" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayTranslators">
+            <xsl:with-param name="translators" select="$src/b:Author/b:Translator/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayLocation">
+            <xsl:with-param name="city" select="$src/b:City" />
+            <xsl:with-param name="province" select="$src/b:StateProvince" />
+            <xsl:with-param name="country" select="$src/b:CountryRegion" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="day" select="$src/b:Day" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="$datePrefix" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
+    </xsl:template>
+
     <xsl:template name="DisplayAuthors">
         <xsl:param name="authors" />
         <xsl:param name="corporate" />
@@ -1252,6 +1348,18 @@
             <xsl:text>, hrsg. von </xsl:text>
             <xsl:call-template name="NameList">
                 <xsl:with-param name="persons" select="$editors" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayCompilers">
+        <xsl:param name="compilers" />
+
+        <xsl:if test="count($compilers) &gt; 0">
+            <xsl:text>, red. von </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$compilers" />
                 <xsl:with-param name="smallCaps" select="'false'" />
             </xsl:call-template>
         </xsl:if>
