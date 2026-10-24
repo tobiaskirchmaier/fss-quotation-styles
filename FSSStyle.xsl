@@ -550,6 +550,18 @@
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
             </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'JournalArticle' and $mode = 'Long'">
+                <xsl:call-template name="JournalArticleLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'JournalArticle' and $mode = 'Short'">
+                <xsl:call-template name="BookShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
             <xsl:when test="$src/b:SourceType = 'InternetSite' and $mode = 'Long'">
                 <xsl:call-template name="InternetSiteLong">
                     <xsl:with-param name="src" select="$src" />
@@ -688,6 +700,60 @@
         </xsl:call-template>
         <xsl:call-template name="DisplayPages">
             <xsl:with-param name="pages" select="$pages" />
+        </xsl:call-template>
+        <xsl:text>.</xsl:text>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
+    </xsl:template>
+
+    <xsl:template name="JournalArticleLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="datePrefix">
+            <xsl:if test="string-length($src/b:Publisher) &gt; 0">
+                <xsl:value-of select="$src/b:Publisher" />
+                <xsl:text>, </xsl:text>
+            </xsl:if>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayJournal">
+            <xsl:with-param name="journal" select="$src/b:JournalName" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayEditors">
+            <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayVolume">
+            <xsl:with-param name="volume" select="$src/b:Volume" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayIssue">
+            <xsl:with-param name="issue" select="$src/b:Issue" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayCity">
+            <xsl:with-param name="city" select="$src/b:City" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="day" select="$src/b:Day" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="$datePrefix" />
         </xsl:call-template>
         <xsl:text>.</xsl:text>
         <xsl:call-template name="DisplayMedium">
@@ -1022,6 +1088,17 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="DisplayIssue">
+        <xsl:param name="issue" />
+
+        <xsl:choose>
+            <xsl:when test="string-length($issue) &gt; 0">
+                <xsl:text>, Ausg. </xsl:text>
+                <xsl:value-of select="$issue" />
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="DisplayChapter">
         <xsl:param name="chapter" />
 
@@ -1032,6 +1109,15 @@
                 <xsl:text>)</xsl:text>
             </xsl:when>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="DisplayCity">
+        <xsl:param name="city" />
+
+        <xsl:if test="string-length($city) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$city" />
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="DisplayLocation">
@@ -1109,6 +1195,20 @@
                 </xsl:when>
             </xsl:choose>
         </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayJournal">
+        <xsl:param name="journal" />
+
+        <xsl:text>, in: </xsl:text>
+        <xsl:choose>
+            <xsl:when test="string-length($journal) &gt; 0">
+                <xsl:value-of select="$journal" />
+            </xsl:when>
+            <xsl:otherwise>
+                o. N.
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="DisplayWebsiteTitle">
