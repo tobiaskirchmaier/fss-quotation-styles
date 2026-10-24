@@ -599,6 +599,7 @@
         </xsl:if>
         <xsl:call-template name="DisplayLocation">
             <xsl:with-param name="city" select="$src/b:City" />
+            <xsl:with-param name="province" select="$src/b:StateProvince" />
             <xsl:with-param name="country" select="$src/b:CountryRegion" />
         </xsl:call-template>
         <xsl:call-template name="DisplayPublisher">
@@ -611,6 +612,16 @@
             <xsl:with-param name="pages" select="$pages" />
         </xsl:call-template>
         <xsl:text>.</xsl:text>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="BookShort">
@@ -680,6 +691,7 @@
         </xsl:if>
         <xsl:call-template name="DisplayLocation">
             <xsl:with-param name="city" select="$src/b:City" />
+            <xsl:with-param name="province" select="$src/b:StateProvince" />
             <xsl:with-param name="country" select="$src/b:CountryRegion" />
         </xsl:call-template>
         <xsl:call-template name="DisplayPublisher">
@@ -692,6 +704,16 @@
             <xsl:with-param name="pages" select="$pages" />
         </xsl:call-template>
         <xsl:text>.</xsl:text>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="InternetSiteLong">
@@ -1001,17 +1023,22 @@
 
     <xsl:template name="DisplayLocation">
         <xsl:param name="city" />
+        <xsl:param name="province" select="''" />
         <xsl:param name="country" />
 
         <xsl:if test="string-length($city) &gt; 0">
             <xsl:text>, </xsl:text>
             <xsl:value-of select="$city" />
         </xsl:if>
+        <xsl:if test="string-length($province) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$province" />
+        </xsl:if>
         <xsl:if test="string-length($country) &gt; 0">
             <xsl:text>, </xsl:text>
             <xsl:value-of select="$country" />
         </xsl:if>
-        <xsl:if test="string-length($city) &lt; 1 and string-length($country) &lt; 1">
+        <xsl:if test="string-length($city) &lt; 1 and string-length($province) &lt; 1 and string-length($country) &lt; 1">
             <xsl:text>, o. O.</xsl:text>
         </xsl:if>
         <xsl:text>: </xsl:text>
@@ -1022,6 +1049,52 @@
 
         <xsl:if test="string-length($publisher) &gt; 0">
             <xsl:value-of select="$publisher" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayMedium">
+        <xsl:param name="medium" />
+
+        <xsl:if test="string-length($medium) &gt; 0">
+            <xsl:text> [</xsl:text>
+            <xsl:value-of select="$medium" />
+            <xsl:text>]</xsl:text>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayDownload">
+        <xsl:param name="dayAccessed" />
+        <xsl:param name="monthAccessed" />
+        <xsl:param name="yearAccessed" />
+        <xsl:param name="doi" select="''" />
+        <xsl:param name="url" />
+
+        <xsl:variable name="dateAccessed">
+            <xsl:value-of select="$dayAccessed" />
+            <xsl:value-of select="$monthAccessed" />
+            <xsl:value-of select="$yearAccessed" />
+        </xsl:variable>
+
+        <xsl:if test="string-length(normalize-space($dateAccessed)) &gt; 0 or string-length($url) &gt; 0 or string-length($doi) &gt; 0">
+            <xsl:text> Download</xsl:text>
+            <xsl:if test="string-length(normalize-space($dateAccessed)) &gt; 0">
+                <xsl:text> am </xsl:text>
+                <xsl:call-template name="DisplayDate">
+                    <xsl:with-param name="day" select="$dayAccessed" />
+                    <xsl:with-param name="month" select="$monthAccessed" />
+                    <xsl:with-param name="year" select="$yearAccessed" />
+                </xsl:call-template>
+            </xsl:if>
+            <xsl:choose>
+                <xsl:when test="string-length($doi) &gt; 0">
+                    <xsl:text>, doi: </xsl:text>
+                    <xsl:value-of select="$doi" />
+                </xsl:when>
+                <xsl:when test="string-length($url) &gt; 0">
+                    <xsl:text> unter </xsl:text>
+                    <xsl:value-of select="$url" />
+                </xsl:when>
+            </xsl:choose>
         </xsl:if>
     </xsl:template>
 
