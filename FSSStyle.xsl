@@ -619,6 +619,18 @@
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
             </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Report' and $mode = 'Long'">
+                <xsl:call-template name="ReportLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Report' and $mode = 'Short'">
+                <xsl:call-template name="BookShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
             <xsl:when test="$src/b:SourceType = 'InternetSite' and $mode = 'Long'">
                 <xsl:call-template name="InternetSiteLong">
                     <xsl:with-param name="src" select="$src" />
@@ -944,6 +956,57 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template name="ReportLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="datePrefix">
+            <xsl:if test="string-length($src/b:Publisher) &gt; 0">
+                <xsl:value-of select="$src/b:Publisher" />
+                <xsl:text>, </xsl:text>
+            </xsl:if>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayThesis">
+            <xsl:with-param name="thesis" select="$src/b:ThesisType" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDepartment">
+            <xsl:with-param name="department" select="$src/b:Department" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayInstitution">
+            <xsl:with-param name="institution" select="$src/b:Institution" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayLocation">
+            <xsl:with-param name="city" select="$src/b:City" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="$datePrefix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayPages">
+            <xsl:with-param name="pages" select="$pages" />
+        </xsl:call-template>
+        <xsl:text>.</xsl:text>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
+    </xsl:template>
+
     <xsl:template name="InternetSiteLong">
         <xsl:param name="src" />
         <xsl:param name="pages" />
@@ -1238,6 +1301,33 @@
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="DisplayThesis">
+        <xsl:param name="thesis" />
+
+        <xsl:if test="string-length($thesis) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$thesis" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayDepartment">
+        <xsl:param name="department" />
+
+        <xsl:if test="string-length($department) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$department" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayInstitution">
+        <xsl:param name="institution" />
+
+        <xsl:if test="string-length($institution) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$institution" />
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="DisplayVolume">
