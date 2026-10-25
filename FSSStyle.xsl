@@ -271,6 +271,12 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Medium</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:Author/b:Writer/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
@@ -284,9 +290,6 @@
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:CountryRegion</xsl:text>
-                            </b:ImportantField>
-                            <b:ImportantField>
-                                <xsl:text>b:StateProvince</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
