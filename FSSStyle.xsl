@@ -1588,15 +1588,10 @@
                 <xsl:when test="count($src/b:Author/b:Writer/b:NameList) &gt; 0">
                     <xsl:copy-of select="$src/b:Author/b:Writer/b:NameList" />
                 </xsl:when>
-                <xsl:when test="count($src/b:Author/b:Performer/b:NameList) &gt; 0">
-                    <xsl:copy-of select="$src/b:Author/b:Performer/b:NameList" />
+                <xsl:when test="count($src/b:Author/b:Director/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Director/b:NameList" />
                 </xsl:when>
             </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="corporate">
-            <xsl:if test="count($src/b:Author/b:Writer/b:NameList) &lt; 1">
-                <xsl:copy-of select="$src/b:Author/b:Performer/b:Corporate" />
-            </xsl:if>
         </xsl:variable>
         <xsl:variable name="datePrefix">
             <xsl:if test="string-length($src/b:Theater) &gt; 0">
@@ -1614,7 +1609,6 @@
 
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="msxsl:node-set($authors)/b:NameList" />
-            <xsl:with-param name="corporate" select="msxsl:node-set($corporate)/b:Corporate" />
         </xsl:call-template>
         <xsl:text>: </xsl:text>
         <xsl:call-template name="DisplayTitle">
@@ -1623,14 +1617,17 @@
         <xsl:call-template name="DisplayMedium">
             <xsl:with-param name="medium" select="$src/b:Medium" />
         </xsl:call-template>
+        <xsl:if test="msxsl:node-set($authors)/b:NameList != $src/b:Author/b:Director/b:NameList">
+            <xsl:call-template name="DisplayDirectors">
+                <xsl:with-param name="directors" select="$src/b:Author/b:Director/b:NameList" />
+            </xsl:call-template>
+        </xsl:if>
         <xsl:if test="msxsl:node-set($authors)/b:NameList != $src/b:Author/b:Performer/b:NameList">
             <xsl:call-template name="DisplayPerformers">
                 <xsl:with-param name="performers" select="$src/b:Author/b:Performer/b:NameList" />
+                <xsl:with-param name="corporate" select="$src/b:Author/b:Performer/b:Corporate" />
             </xsl:call-template>
         </xsl:if>
-        <xsl:call-template name="DisplayDirectors">
-            <xsl:with-param name="directors" select="$src/b:Author/b:Director/b:NameList" />
-        </xsl:call-template>
         <xsl:call-template name="DisplayProducers">
             <xsl:with-param name="productionCompany" select="$src/b:ProductionCompany" />
             <xsl:with-param name="producers" select="$src/b:Author/b:ProducerName/b:NameList" />
@@ -1665,15 +1662,10 @@
                 <xsl:when test="count($src/b:Author/b:Writer/b:NameList) &gt; 0">
                     <xsl:copy-of select="$src/b:Author/b:Writer/b:NameList" />
                 </xsl:when>
-                <xsl:when test="count($src/b:Author/b:Performer/b:NameList) &gt; 0">
-                    <xsl:copy-of select="$src/b:Author/b:Performer/b:NameList" />
+                <xsl:when test="count($src/b:Author/b:Director/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Director/b:NameList" />
                 </xsl:when>
             </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="corporate">
-            <xsl:if test="count($src/b:Author/b:Writer/b:NameList) &lt; 1">
-                <xsl:copy-of select="$src/b:Author/b:Performer/b:Corporate" />
-            </xsl:if>
         </xsl:variable>
         <xsl:variable name="dateSuffix">
             <xsl:if test="string-length($pages) &gt; 0">
@@ -1685,7 +1677,6 @@
 
         <xsl:call-template name="DisplayAuthors">
             <xsl:with-param name="authors" select="msxsl:node-set($authors)/b:NameList" />
-            <xsl:with-param name="corporate" select="msxsl:node-set($corporate)/b:Corporate" />
             <xsl:with-param name="short" select="'true'" />
         </xsl:call-template>
         <xsl:text>: </xsl:text>
@@ -1745,6 +1736,7 @@
         </xsl:if>
         <xsl:call-template name="DisplayPerformers">
             <xsl:with-param name="performers" select="$src/b:Author/b:Performer/b:NameList" />
+            <xsl:with-param name="corporate" select="$src/b:Author/b:Performer/b:Corporate" />
         </xsl:call-template>
         <xsl:call-template name="DisplayProducers">
             <xsl:with-param name="productionCompany" select="$src/b:ProductionCompany" />
@@ -1887,14 +1879,21 @@
 
     <xsl:template name="DisplayPerformers">
         <xsl:param name="performers" />
+        <xsl:param name="corporate" />
 
-        <xsl:if test="count($performers) &gt; 0">
-            <xsl:text>, interpr. von </xsl:text>
-            <xsl:call-template name="NameList">
-                <xsl:with-param name="persons" select="$performers" />
-                <xsl:with-param name="smallCaps" select="'false'" />
-            </xsl:call-template>
-        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="string-length($corporate) &gt; 0">
+                <xsl:text>, interpr. von </xsl:text>
+                <xsl:value-of select="$corporate" />
+            </xsl:when>
+            <xsl:when test="count($performers) &gt; 0">
+                <xsl:text>, interpr. von </xsl:text>
+                <xsl:call-template name="NameList">
+                    <xsl:with-param name="persons" select="$performers" />
+                    <xsl:with-param name="smallCaps" select="'false'" />
+                </xsl:call-template>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="DisplayConductors">
