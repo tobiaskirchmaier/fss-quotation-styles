@@ -631,7 +631,7 @@
 
         <html xmlns="http://www.w3.org/TR/REC-html40">
             <head>
-                <style>h2 { font-family: "Calibri Light", Arial, sans-serif; font-size: 13pt; font-weight: bold; color: #2F5597; margin-top: 12pt; margin-bottom: 3pt; line-height: 1.0; }</style>
+                <style>h2 { font-family: "Calibri Light", Arial, sans-serif; font-size: 13pt; font-weight: normal; color: #2F5597; margin-top: 3pt; margin-bottom: 3pt; line-height: 1.0; }</style>
             </head>
             <body>
                 <xsl:if test="$primarySources">
@@ -662,7 +662,7 @@
         <xsl:for-each select="$sources">
             <xsl:sort select="b:Author/b:Author/b:NameList/b:Person[1]/b:Last | b:Author/b:Author/b:Corporate"/>
             <xsl:sort select="b:Year"/>
-            <p>
+            <p class="MsoBibliography" dir="ltr" style="margin-left:.5in;text-indent:-.5in">
                 <xsl:call-template name="FormatSource">
                     <xsl:with-param name="src" select="." />
                     <xsl:with-param name="mode" select="'Long'" />
