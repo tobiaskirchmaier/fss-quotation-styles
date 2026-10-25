@@ -1915,6 +1915,8 @@
         </xsl:call-template>
         <xsl:call-template name="DisplayDate">
             <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="day" select="$src/b:Day" />
             <xsl:with-param name="prefix" select="$datePrefix" />
             <xsl:with-param name="suffix" select="$dateSuffix" />
         </xsl:call-template>
