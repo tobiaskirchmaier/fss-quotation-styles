@@ -449,7 +449,13 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:City</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:Author/b:Interviewer/b:NameList</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Author/b:Compiler/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
@@ -459,6 +465,15 @@
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Day</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:BroadcastTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Broadcaster</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Station</xsl:text>
                             </b:ImportantField>
                         </xsl:when>
 
@@ -799,6 +814,18 @@
             </xsl:when>
             <xsl:when test="$src/b:SourceType = 'Film' and $mode = 'Short'">
                 <xsl:call-template name="PerformanceShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Interview' and $mode = 'Long'">
+                <xsl:call-template name="InterviewLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Interview' and $mode = 'Short'">
+                <xsl:call-template name="InterviewShort">
                     <xsl:with-param name="src" select="$src" />
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
@@ -1783,6 +1810,140 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template name="InterviewLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="authors">
+            <xsl:choose>
+                <xsl:when test="count($src/b:Author/b:Compiler/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Compiler/b:NameList" />
+                </xsl:when>
+                <xsl:when test="count($src/b:Author/b:Editor/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Editor/b:NameList" />
+                </xsl:when>
+                <xsl:when test="count($src/b:Author/b:Interviewer/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Interviewer/b:NameList" />
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="datePrefix">
+            <xsl:choose>
+                <xsl:when test="string-length($src/b:Publisher) &gt; 0">
+                    <xsl:value-of select="$src/b:Publisher" />
+                    <xsl:text>, </xsl:text>
+                </xsl:when>
+                <xsl:when test="string-length($src/b:Station) &gt; 0">
+                    <xsl:value-of select="$src/b:Station" />
+                    <xsl:text>, </xsl:text>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="dateSuffix">
+            <xsl:if test="string-length($pages) &gt; 0">
+                <xsl:text>, </xsl:text>
+                <xsl:value-of select="$pages" />
+            </xsl:if>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="msxsl:node-set($authors)/b:NameList" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayBroadcastTitle">
+            <xsl:with-param name="title" select="$src/b:BroadcastTitle" />
+        </xsl:call-template>
+        <xsl:if test="string-length($src/b:Publisher) &gt; 0">
+            <xsl:call-template name="DisplayStation">
+                <xsl:with-param name="station" select="$src/b:Station" />
+            </xsl:call-template>
+        </xsl:if>
+        <xsl:call-template name="DisplayBroadcaster">
+            <xsl:with-param name="broadcaster" select="$src/b:Broadcaster" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayInterviewee">
+            <xsl:with-param name="interviewee" select="$src/b:Author/b:Interviewee/b:NameList" />
+        </xsl:call-template>
+        <xsl:if test="msxsl:node-set($authors)/b:NameList != $src/b:Author/b:Interviewer/b:NameList">
+            <xsl:call-template name="DisplayInterviewer">
+                <xsl:with-param name="interviewer" select="$src/b:Author/b:Interviewer/b:NameList" />
+            </xsl:call-template>
+        </xsl:if>
+        <xsl:if test="msxsl:node-set($authors)/b:NameList != $src/b:Author/b:Editor/b:NameList">
+            <xsl:call-template name="DisplayEditors">
+                <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+            </xsl:call-template>
+        </xsl:if>
+        <xsl:call-template name="DisplayTranslators">
+            <xsl:with-param name="translators" select="$src/b:Author/b:Translator/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayLocation">
+            <xsl:with-param name="city" select="$src/b:City" />
+            <xsl:with-param name="province" select="$src/b:StateProvince" />
+            <xsl:with-param name="country" select="$src/b:CountryRegion" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="$datePrefix" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
+    </xsl:template>
+
+    <xsl:template name="InterviewShort">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="authors">
+            <xsl:choose>
+                <xsl:when test="count($src/b:Author/b:Compiler/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Compiler/b:NameList" />
+                </xsl:when>
+                <xsl:when test="count($src/b:Author/b:Editor/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Editor/b:NameList" />
+                </xsl:when>
+                <xsl:when test="count($src/b:Author/b:Interviewer/b:NameList) &gt; 0">
+                    <xsl:copy-of select="$src/b:Author/b:Interviewer/b:NameList" />
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="dateSuffix">
+            <xsl:if test="string-length($pages) &gt; 0">
+                <xsl:text>, </xsl:text>
+                <xsl:value-of select="$pages" />
+            </xsl:if>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="msxsl:node-set($authors)/b:NameList" />
+            <xsl:with-param name="short" select="'true'" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitleShort">
+            <xsl:with-param name="title" select="$src/b:Title" />
+            <xsl:with-param name="shortTitle" select="$src/b:ShortTitle" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+    </xsl:template>
+
     <xsl:template name="DisplayAuthors">
         <xsl:param name="authors" />
         <xsl:param name="corporate" />
@@ -1945,6 +2106,30 @@
         </xsl:if>
     </xsl:template>
 
+    <xsl:template name="DisplayInterviewee">
+        <xsl:param name="interviewee" />
+
+        <xsl:if test="count($interviewee) &gt; 0">
+            <xsl:text>, mit </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$interviewee" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayInterviewer">
+        <xsl:param name="interviewer" />
+
+        <xsl:if test="count($interviewer) &gt; 0">
+            <xsl:text>, interv. von </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$interviewer" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
     <xsl:template name="NameList">
         <xsl:param name="persons" />
         <xsl:param name="corporate" select="''" />
@@ -2066,6 +2251,35 @@
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="DisplayBroadcastTitle">
+        <xsl:param name="title" />
+
+        <xsl:if test="string-length($title) &gt; 0">
+            <xsl:text>, in: </xsl:text>
+            <xsl:call-template name="DisplayTitle">
+                <xsl:with-param name="title" select="$title" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayStation">
+        <xsl:param name="station" />
+
+        <xsl:if test="string-length($station) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$station" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayBroadcaster">
+        <xsl:param name="broadcaster" />
+
+        <xsl:if test="string-length($broadcaster) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$broadcaster" />
+        </xsl:if>
     </xsl:template>
 
     <xsl:template name="DisplayThesis">
