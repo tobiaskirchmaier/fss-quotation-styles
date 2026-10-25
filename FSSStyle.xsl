@@ -1713,7 +1713,7 @@
                         </xsl:choose>
                         <xsl:if test="normalize-space(b:First) != ''">
                             <xsl:choose>
-                                <xsl:when test="position() &gt; 1">
+                                <xsl:when test="position() &gt; 1 or $smallCaps = 'false'">
                                     <xsl:text> </xsl:text>
                                     <xsl:value-of select="b:First"/>
                                     <xsl:if test="normalize-space(b:Middle) != ''">
