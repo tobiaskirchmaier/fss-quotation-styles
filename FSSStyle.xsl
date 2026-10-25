@@ -238,7 +238,22 @@
                                 <xsl:text>b:Author/b:Performer/b:NameList</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:Author/b:Artist/b:NameList</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:Title</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Medium</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:AlbumTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:ProductionCompany</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
@@ -248,9 +263,6 @@
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:CountryRegion</xsl:text>
-                            </b:ImportantField>
-                            <b:ImportantField>
-                                <xsl:text>b:StateProvince</xsl:text>
                             </b:ImportantField>
                         </xsl:when>
 
