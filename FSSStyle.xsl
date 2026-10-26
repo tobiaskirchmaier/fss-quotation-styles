@@ -20,7 +20,7 @@
     <xsl:template match="/">
         <xsl:choose>
             <xsl:when test="b:Version">
-                <xsl:text>1.0-beta</xsl:text>
+                <xsl:text>1.1-beta</xsl:text>
             </xsl:when>
             <xsl:when test="b:XslVersion">
                 <xsl:text>1</xsl:text>
