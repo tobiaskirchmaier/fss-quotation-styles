@@ -669,8 +669,50 @@
         <xsl:param name="sources" />
 
         <xsl:for-each select="$sources">
-            <xsl:sort select="b:Author/b:Author/b:NameList/b:Person[1]/b:Last | b:Author/b:Author/b:Corporate"/>
-            <xsl:sort select="b:Year"/>
+            <xsl:sort select="
+                concat(
+                    substring(
+                        string(b:Author/b:Author/b:NameList/b:Person[1]/b:Last | b:Author/b:Author/b:Corporate), 1,
+                        string-length(string(b:Author/b:Author/b:NameList/b:Person[1]/b:Last | b:Author/b:Author/b:Corporate)) * boolean(b:Author/b:Author)
+                    ),
+                    substring(
+                        string(b:Author/b:Inventor/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Inventor/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and b:Author/b:Inventor)
+                    ),
+                    substring(
+                        string(b:Author/b:Compiler/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Compiler/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and b:Author/b:Compiler)
+                    ),
+                    substring(
+                        string(b:Author/b:Editor/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Editor/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and b:Author/b:Editor)
+                    ),
+                    substring(
+                        string(b:Court), 1,
+                        string-length(string(b:Court)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and not(b:Author/b:Editor) and b:Court)
+                    ),
+                    substring(
+                        string(b:Author/b:Artist/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Artist/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and not(b:Author/b:Editor) and not(b:Court) and b:Author/b:Artist)
+                    ),
+                    substring(
+                        string(b:Author/b:Writer/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Writer/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and not(b:Author/b:Editor) and not(b:Court) and not(b:Author/b:Artist) and b:Author/b:Writer)
+                    ),
+                    substring(
+                        string(b:Author/b:Director/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Director/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and not(b:Author/b:Editor) and not(b:Court) and not(b:Author/b:Artist) and not(b:Author/b:Writer) and b:Author/b:Director)
+                    ),
+                    substring(
+                        string(b:Author/b:Performer/b:NameList/b:Person[1]/b:Last | b:Author/b:Performer/b:Corporate), 1,
+                        string-length(string(b:Author/b:Performer/b:NameList/b:Person[1]/b:Last | b:Author/b:Performer/b:Corporate)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and not(b:Author/b:Editor) and not(b:Court) and not(b:Author/b:Artist) and not(b:Author/b:Writer) and not(b:Author/b:Director) and b:Author/b:Performer)
+                    ),
+                    substring(
+                        string(b:Author/b:Composer/b:NameList/b:Person[1]/b:Last), 1,
+                        string-length(string(b:Author/b:Composer/b:NameList/b:Person[1]/b:Last)) * boolean(not(b:Author/b:Author) and not(b:Author/b:Inventor) and not(b:Author/b:Compiler) and not(b:Author/b:Editor) and not(b:Court) and not(b:Author/b:Artist) and not(b:Author/b:Writer) and not(b:Author/b:Director) and not(b:Author/b:Performer) and b:Author/b:Composer)
+                    )
+                )
+            "/>
             <p class="MsoBibliography" dir="ltr" style="margin-left:.5in;text-indent:-.5in">
                 <xsl:call-template name="FormatSource">
                     <xsl:with-param name="src" select="." />
