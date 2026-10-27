@@ -548,10 +548,19 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:CaseNumber</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Court</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Author/b:Counsel/b:NameList</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
+                                <xsl:text>b:Reporter</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Year</xsl:text>
@@ -853,6 +862,18 @@
             </xsl:when>
             <xsl:when test="$src/b:SourceType = 'Patent' and $mode = 'Short'">
                 <xsl:call-template name="PatentShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Case' and $mode = 'Long'">
+                <xsl:call-template name="CaseLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Case' and $mode = 'Short'">
+                <xsl:call-template name="CaseShort">
                     <xsl:with-param name="src" select="$src" />
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
@@ -2053,6 +2074,125 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template name="CaseLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="corporate">
+            <xsl:if test="count($src/b:Author/b:Author/b:NameList) &lt; 1">
+                <xsl:choose>
+                    <xsl:when test="string-length($src/b:Author/b:Author/b:Corporate) &gt; 0">
+                        <xsl:value-of select="$src/b:Author/b:Author/b:Corporate" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$src/b:Court" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="datePrefix">
+            <xsl:text>, Urteil </xsl:text>
+            <xsl:choose>
+                <xsl:when test="string-length($src/b:Day) &gt; 0">
+                    <xsl:text>vom </xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>von </xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="locationSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$corporate" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="day" select="$src/b:Day" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="prefix" select="$datePrefix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayCaseNum">
+            <xsl:with-param name="caseNum" select="$src/b:CaseNumber" />
+        </xsl:call-template>
+        <xsl:if test="$corporate != $src/b:Court and string-length($src/b:Court) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$src/b:Court" />
+        </xsl:if>
+        <xsl:call-template name="DisplayReporter">
+            <xsl:with-param name="reporter" select="$src/b:Reporter" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayCounsel">
+            <xsl:with-param name="counsel" select="$src/b:Author/b:Counsel/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayLocation">
+            <xsl:with-param name="city" select="$src/b:City" />
+            <xsl:with-param name="suffix" select="$locationSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
+    </xsl:template>
+
+    <xsl:template name="CaseShort">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="corporate">
+            <xsl:if test="count($src/b:Author/b:Author/b:NameList) &lt; 1">
+                <xsl:choose>
+                    <xsl:when test="string-length($src/b:Author/b:Author/b:Corporate) &gt; 0">
+                        <xsl:value-of select="$src/b:Author/b:Author/b:Corporate" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$src/b:Court" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="dateSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$corporate" />
+            <xsl:with-param name="short" select="'true'" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitleShort">
+            <xsl:with-param name="title" select="$src/b:Title" />
+            <xsl:with-param name="shortTitle" select="$src/b:ShortTitle" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="day" select="$src/b:Day" />
+            <xsl:with-param name="prefix" select="', '" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+    </xsl:template>
+
     <xsl:template name="DisplayAuthors">
         <xsl:param name="authors" />
         <xsl:param name="corporate" />
@@ -2236,6 +2376,19 @@
                 <xsl:with-param name="persons" select="$interviewer" />
                 <xsl:with-param name="smallCaps" select="'false'" />
             </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayCounsel">
+        <xsl:param name="counsel" />
+
+        <xsl:if test="count($counsel) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:call-template name="NameList">
+                <xsl:with-param name="persons" select="$counsel" />
+                <xsl:with-param name="smallCaps" select="'false'" />
+            </xsl:call-template>
+            <xsl:text> (RB)</xsl:text>
         </xsl:if>
     </xsl:template>
 
@@ -2440,6 +2593,24 @@
         </xsl:if>
     </xsl:template>
 
+    <xsl:template name="DisplayCaseNum">
+        <xsl:param name="caseNum" />
+
+        <xsl:if test="string-length($caseNum) &gt; 0">
+            <xsl:text> – </xsl:text>
+            <xsl:value-of select="$caseNum" />
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayReporter">
+        <xsl:param name="reporter" />
+
+        <xsl:if test="string-length($reporter) &gt; 0">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="$reporter" />
+        </xsl:if>
+    </xsl:template>
+
     <xsl:template name="DisplayPatentNum">
         <xsl:param name="patentNum" />
 
@@ -2508,10 +2679,17 @@
             <xsl:text>, </xsl:text>
             <xsl:value-of select="$country" />
         </xsl:if>
-        <xsl:if test="string-length($city) &lt; 1 and string-length($province) &lt; 1 and string-length($country) &lt; 1">
-            <xsl:text>, o. O.</xsl:text>
-        </xsl:if>
-        <xsl:value-of select="$suffix" />
+        <xsl:choose>
+            <xsl:when test="string-length($city) &lt; 1 and string-length($province) &lt; 1 and string-length($country) &lt; 1">
+                <xsl:text>, o. O.</xsl:text>
+                <xsl:if test="$suffix != '.'">
+                    <xsl:value-of select="$suffix" />
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$suffix" />
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="DisplayPublisher">
@@ -2548,7 +2726,10 @@
         <xsl:if test="string-length(normalize-space($dateAccessed)) &gt; 0 or string-length($url) &gt; 0 or string-length($doi) &gt; 0">
             <xsl:text> Download</xsl:text>
             <xsl:if test="string-length(normalize-space($dateAccessed)) &gt; 0">
-                <xsl:text> am </xsl:text>
+                <xsl:text> </xsl:text>
+                <xsl:if test="string-length($dayAccessed) &gt; 0">
+                    <xsl:text>am </xsl:text>
+                </xsl:if>
                 <xsl:call-template name="DisplayDate">
                     <xsl:with-param name="day" select="$dayAccessed" />
                     <xsl:with-param name="month" select="$monthAccessed" />
