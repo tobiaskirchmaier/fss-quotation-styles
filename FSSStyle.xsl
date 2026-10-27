@@ -581,6 +581,9 @@
                                 <xsl:text>b:Title</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
+                                <xsl:text>b:ShortTitle</xsl:text>
+                            </b:ImportantField>
+                            <b:ImportantField>
                                 <xsl:text>b:PublicationTitle</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
@@ -597,9 +600,6 @@
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:CountryRegion</xsl:text>
-                            </b:ImportantField>
-                            <b:ImportantField>
-                                <xsl:text>b:StateProvince</xsl:text>
                             </b:ImportantField>
                             <b:ImportantField>
                                 <xsl:text>b:Publisher</xsl:text>
@@ -874,6 +874,18 @@
             </xsl:when>
             <xsl:when test="$src/b:SourceType = 'Case' and $mode = 'Short'">
                 <xsl:call-template name="CaseShort">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Misc' and $mode = 'Long'">
+                <xsl:call-template name="MiscLong">
+                    <xsl:with-param name="src" select="$src" />
+                    <xsl:with-param name="pages" select="$pages" />
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:when test="$src/b:SourceType = 'Misc' and $mode = 'Short'">
+                <xsl:call-template name="BookShort">
                     <xsl:with-param name="src" select="$src" />
                     <xsl:with-param name="pages" select="$pages" />
                 </xsl:call-template>
@@ -2193,6 +2205,89 @@
         </xsl:call-template>
     </xsl:template>
 
+    <xsl:template name="MiscLong">
+        <xsl:param name="src" />
+        <xsl:param name="pages" />
+
+        <xsl:variable name="locationSuffix">
+            <xsl:choose>
+                <xsl:when test="string-length($src/b:Publisher) &gt; 0">
+                    <xsl:text>: </xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:text>, </xsl:text>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="datePrefix">
+            <xsl:if test="string-length($src/b:Publisher) &gt; 0">
+                <xsl:call-template name="DisplayPublisher">
+                    <xsl:with-param name="publisher" select="$src/b:Publisher" />
+                </xsl:call-template>
+                <xsl:text>, </xsl:text>
+            </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="dateSuffix">
+            <xsl:call-template name="DisplayPages">
+                <xsl:with-param name="pages" select="$pages" />
+            </xsl:call-template>
+            <xsl:text>.</xsl:text>
+        </xsl:variable>
+
+        <xsl:call-template name="DisplayAuthors">
+            <xsl:with-param name="authors" select="$src/b:Author/b:Author/b:NameList" />
+            <xsl:with-param name="corporate" select="$src/b:Author/b:Author/b:Corporate" />
+        </xsl:call-template>
+        <xsl:text>: </xsl:text>
+        <xsl:call-template name="DisplayTitle">
+            <xsl:with-param name="title" select="$src/b:Title" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayPublicationTitle">
+            <xsl:with-param name="title" select="$src/b:PublicationTitle" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayEditors">
+            <xsl:with-param name="editors" select="$src/b:Author/b:Editor/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayVolume">
+            <xsl:with-param name="volume" select="$src/b:Volume" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayEdition">
+            <xsl:with-param name="edition" select="$src/b:Edition" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayIssue">
+            <xsl:with-param name="issue" select="$src/b:Issue" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayCompilers">
+            <xsl:with-param name="compilers" select="$src/b:Author/b:Compiler/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayTranslators">
+            <xsl:with-param name="translators" select="$src/b:Author/b:Translator/b:NameList" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayLocation">
+            <xsl:with-param name="city" select="$src/b:City" />
+            <xsl:with-param name="province" select="$src/b:StateProvince" />
+            <xsl:with-param name="country" select="$src/b:CountryRegion" />
+            <xsl:with-param name="suffix" select="$locationSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDate">
+            <xsl:with-param name="year" select="$src/b:Year" />
+            <xsl:with-param name="month" select="$src/b:Month" />
+            <xsl:with-param name="day" select="$src/b:Day" />
+            <xsl:with-param name="prefix" select="$datePrefix" />
+            <xsl:with-param name="suffix" select="$dateSuffix" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayMedium">
+            <xsl:with-param name="medium" select="$src/b:Medium" />
+        </xsl:call-template>
+        <xsl:call-template name="DisplayDownload">
+            <xsl:with-param name="dayAccessed" select="$src/b:DayAccessed" />
+            <xsl:with-param name="monthAccessed" select="$src/b:MonthAccessed" />
+            <xsl:with-param name="yearAccessed" select="$src/b:YearAccessed" />
+            <xsl:with-param name="doi" select="$src/b:DOI" />
+            <xsl:with-param name="url" select="$src/b:URL" />
+        </xsl:call-template>
+    </xsl:template>
+
     <xsl:template name="DisplayAuthors">
         <xsl:param name="authors" />
         <xsl:param name="corporate" />
@@ -2516,6 +2611,17 @@
     </xsl:template>
 
     <xsl:template name="DisplayBroadcastTitle">
+        <xsl:param name="title" />
+
+        <xsl:if test="string-length($title) &gt; 0">
+            <xsl:text>, in: </xsl:text>
+            <xsl:call-template name="DisplayTitle">
+                <xsl:with-param name="title" select="$title" />
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="DisplayPublicationTitle">
         <xsl:param name="title" />
 
         <xsl:if test="string-length($title) &gt; 0">
