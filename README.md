@@ -17,4 +17,19 @@ Falls Sie bereits MS Word geöffnet haben, so starten Sie MS Word neu. Die Insta
 ## Implementierungsgrad
 Aktuell werden die folgenden Quellentypen unterstützt:
 - `Buch`
+- `Buchabschnitt`
+- `Zeitungsartikel`
+- `Artikel in einer Zeitschrift`
+- `Konferenzprotokoll`
+- `Bericht`
 - `Website`
+- `Dokument von Website`
+- `Elektronische Quelle`
+- `Kunst`
+- `Tonaufnahme`
+- `Aufführung`
+- `Film`
+- `Interview`
+- `Patent`
+- `Fall`
+- `Verschiedenes`
