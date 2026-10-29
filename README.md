@@ -14,22 +14,15 @@ Unter [Releases](https://github.com/tobiaskirchmaier/fss-quotation-styles/releas
 
 Falls Sie bereits MS Word geöffnet haben, so starten Sie MS Word neu. Die Installation ist abgeschlossen. Der Installer kann gelöscht werden.
 
-## Implementierungsgrad
-Aktuell werden die folgenden Quellentypen unterstützt:
-- `Buch`
-- `Buchabschnitt`
-- `Zeitungsartikel`
-- `Artikel in einer Zeitschrift`
-- `Konferenzprotokoll`
-- `Bericht`
-- `Website`
-- `Dokument von Website`
-- `Elektronische Quelle`
-- `Kunst`
-- `Tonaufnahme`
-- `Aufführung`
-- `Film`
-- `Interview`
-- `Patent`
-- `Fall`
-- `Verschiedenes`
+## Funktionen
+
+Der FSS-Zitierstil ermöglicht:
+- [x] die Generierung von Quellenangaben basierend auf der deutschen Zitierweise
+- [x] eine Unterscheidung zwischen Vollbeleg und Kurzbeleg
+- [x] automatisierte Generierung des Literaturverzeichnisses
+  - [x] alphabetische Sortierung des Literaturverzeichnisses nach Autor
+  - [x] Gliederung in Primärquellen, Sekundärliteratur und Internet- und mediale Quellen
+
+## Dokumentation
+
+Eine Anleitung bzgl. der Anwendung und weitere Informationen finden Sie innerhalb der [Dokumentation](https://github.com/tobiaskirchmaier/fss-quotation-styles/wiki).
