@@ -1,0 +1,3 @@
+#define IDB_MY_IMAGE 101
+
+IDB_MY_IMAGE BITMAP "banner.bmp"
