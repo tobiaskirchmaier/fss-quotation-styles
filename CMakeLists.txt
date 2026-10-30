@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.3)
 
 project(
         FSSStyleInstaller
-        VERSION 1.0.0
+        VERSION 1.0.1
         LANGUAGES CXX
 )
 
@@ -19,7 +19,5 @@ add_executable(FSSStyleInstaller WIN32
 )
 
 target_link_libraries(FSSStyleInstaller PRIVATE
-        winhttp
-        shell32
         comctl32
 )
