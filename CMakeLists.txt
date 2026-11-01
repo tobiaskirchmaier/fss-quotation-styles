@@ -16,6 +16,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(FSSStyleInstaller WIN32
         installer/main.cpp
         installer/resource.rc
+        installer/app.manifest
 )
 
 target_link_libraries(FSSStyleInstaller PRIVATE
